@@ -12,13 +12,15 @@
         v-for="user in users"
         :key="user.id"
       >
-        <a href="#">
+        <router-link 
+        :to="{ name: 'user', params: { id: user.id }}"
+        >
           <img
             :src="user.image"
             width="140px"
             height="140px"
           >
-        </a>
+        </router-link>
         <h2>{{ user.name }}</h2>
         <span class="badge badge-secondary">追蹤人數：{{ user.FollowerCount }}</span>
         <p class="mt-3">
@@ -81,7 +83,7 @@ const dummyData = {
             "email": "user2@example.com",
             "password": "$2a$10$3GDQ3s.F8r3ShGV2fsBvI.t.kxWONIu5Gr7Zq5RenQYVegYSoj3zu",
             "isAdmin": false,
-            "image": "https://randomuser.me/api/portraits/lego/1.jpg",
+            "image": "https://randomuser.me/api/portraits/women/50.jpg",
             "createdAt": "2022-07-06T12:16:09.000Z",
             "updatedAt": "2022-07-06T12:16:09.000Z",
             "Followers": [],

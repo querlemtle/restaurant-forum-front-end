@@ -1244,7 +1244,7 @@ export default {
       userFollowings: [],
       userFollowers: [],
       userComments: [],
-      userFavoritedRestaurants: [] 
+      userFavoritedRestaurants: []
     }
   },
   created() {

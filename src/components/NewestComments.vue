@@ -8,14 +8,14 @@
       v-for="comment in comments"
       :key="comment.id">
         <h4>
-          <a href="#">
+          <router-link :to="{ name: 'restaurant', params: { id: comment.Restaurant.id }}">
             {{ comment.Restaurant.name }}
-          </a>
+          </router-link>
         </h4>
         <p>At reiciendis eaque hic excepturi ratione officiis ad ut minus.</p>by
-        <a href="#">
+        <router-link :to="{ name: 'user', params: { id: comment.UserId }}">
           root
-        </a>
+        </router-link>
         at 3 days ago
         <hr>
       </div>

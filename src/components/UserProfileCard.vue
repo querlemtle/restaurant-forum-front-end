@@ -19,7 +19,26 @@
           method="POST"
           style="display: contents"
         >
-          <button type="submit" class="btn btn-danger">取消追蹤</button>
+          <template
+          v-if="dummyUser.isAuthenticated"
+          >
+            <button type="submit" class="btn btn-primary">Edit</button>
+          </template>
+          <template v-else>
+            <button
+            v-if="user.isFollowed"
+            type="submit"
+            class="btn btn-danger"
+            @click.stop.prevent="deleteFollowed"
+            >
+            取消追蹤</button>
+            <button
+            v-else
+            type="submit"
+            class="btn btn-primary"
+            @click.stop.prevent="addFollowed"
+            >追蹤</button>
+          </template>
         </form>
         <p></p>
       </div>
@@ -28,6 +47,17 @@
 </template>
 
 <script>
+const dummyUser = {
+  currentUser: {
+    id: 1,
+    name: '管理者',
+    email: 'root@example.com',
+    image: 'https://i.pravatar.cc/300',
+    isAdmin: true
+  },
+  isAuthenticated: true
+}
+
 export default {
   props: {
     initialUser: {
@@ -53,7 +83,22 @@ export default {
   },
   data () {
     return {
-      user: this.initialUser
+      user: this.initialUser,
+      dummyUser
+    }
+  },
+  methods: {
+    addFollowed () {
+      this.user = {
+        ...this.user,
+        isFollowed: true
+      }  
+    },
+    deleteFollowed () {
+      this.user = {
+        ...this.user,
+        isFollowed: false
+      }
     }
   }
 }
