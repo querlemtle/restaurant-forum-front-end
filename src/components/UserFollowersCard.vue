@@ -5,13 +5,12 @@
     </div>
 
     <div class="card-body">
-      <a 
-      href="#"
-      v-for="user in userFollowers"
+      <router-link v-for="user in userFollowers"
+      :to="{ name: 'user', params: { id: user.id } }"
       :key="user.id"
       >
         <img :src="user.image" width="60" height="60" class="avatar">
-      </a>
+      </router-link>
     </div>
   </div>
 </template>
