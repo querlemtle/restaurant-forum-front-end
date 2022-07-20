@@ -23,8 +23,8 @@
 
 <script>
 import NavTabs from './../components/NavTabs'
-import NewestRestaurants from './../components/NewestRestaurants.vue'
-import NewestComments from '../components/NewestComments.vue'
+import NewestRestaurants from './../components/NewestRestaurants'
+import NewestComments from '../components/NewestComments'
 
 const dummyData = {
   "restaurants": [

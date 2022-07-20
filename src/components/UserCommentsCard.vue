@@ -8,7 +8,7 @@
       :key="restaurant.id"
       >
         <img
-          :src="restaurant.Restaurant.image"
+          :src="restaurant.Restaurant.image | emptyImage"
           width="60"
           height="60"
           class="avatar"
@@ -19,7 +19,11 @@
 </template>
 
 <script>
+import { emptyImageFilter } from './../utils/mixins'
+
 export default {
+  name: 'UserCommentsCard',
+  mixins: [emptyImageFilter],
   props: {
     userComments: {
       type: Array,

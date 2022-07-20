@@ -7,7 +7,6 @@
   </div>
 </template>
 
-// ./src/App.vue
 <script>
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'

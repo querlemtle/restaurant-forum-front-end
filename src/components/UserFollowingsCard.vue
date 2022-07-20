@@ -9,14 +9,18 @@
       :to="{ name: 'user', params: { id: user.id } }"
       :key="user.id"
       >
-        <img :src="user.image" width="60" height="60" class="avatar">
+        <img :src="user.image | emptyImage" width="60" height="60" class="avatar">
       </router-link>
     </div>
   </div>
 </template>
 
 <script>
+import { emptyImageFilter } from './../utils/mixins'
+
 export default {
+  name: 'UserFollowingsCard',
+  mixins: [emptyImageFilter],
   props: {
     userFollowings: {
       type: Array,
