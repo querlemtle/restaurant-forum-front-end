@@ -73,6 +73,7 @@ export default {
             page: queryPage,
             categoryId: queryCategoryId
           })
+
             const { restaurants, categories, categoryId, page, totalPage, prev, next } = response.data
 
             this.restaurants = restaurants
@@ -82,8 +83,6 @@ export default {
             this.totalPage = totalPage
             this.previousPage = prev
             this.nextPage = next
-
-          console.log(response)
         } catch(error) {
           Toast.fire({
             icon: 'error',
