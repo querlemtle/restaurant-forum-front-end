@@ -49,82 +49,63 @@
 
 <script>
 import AdminNav from './../components/AdminNav'
-
-const dummyUsers = {
-    "users": [
-        {
-            "id": 1,
-            "name": "root",
-            "email": "root@example.com",
-            "password": "$2a$10$S8ZluMfYv61FlwiU0CDz8OBNOnmeiJo/lAM/5vHVvg3f9KMcZ4XS2",
-            "isAdmin": true,
-            "image": null,
-            "createdAt": "2022-07-06T12:16:09.000Z",
-            "updatedAt": "2022-07-06T12:16:09.000Z"
-        },
-        {
-            "id": 2,
-            "name": "user1",
-            "email": "user1@example.com",
-            "password": "$2a$10$g1oNfya7s7mfe9AuUI61TOzU4GKFXWwRQpeUuKVQ4NH46PRt2EIv2",
-            "isAdmin": false,
-            "image": null,
-            "createdAt": "2022-07-06T12:16:09.000Z",
-            "updatedAt": "2022-07-06T12:16:09.000Z"
-        },
-        {
-            "id": 3,
-            "name": "user2",
-            "email": "user2@example.com",
-            "password": "$2a$10$3GDQ3s.F8r3ShGV2fsBvI.t.kxWONIu5Gr7Zq5RenQYVegYSoj3zu",
-            "isAdmin": false,
-            "image": null,
-            "createdAt": "2022-07-06T12:16:09.000Z",
-            "updatedAt": "2022-07-06T12:16:09.000Z"
-        }
-    ]
-}
-
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: 'root1',
-    email: 'root@example.com',
-    isAdmin: true
-  },
-  isAuthenticated: true
-}
+import adminAPI from './../apis/admin'
+import { Toast } from './../utils/helpers'
+import { mapState } from 'vuex'
 
 export default {
   name: 'AdminUsers',
   data () {
     return {
-      users: [],
-      currentUser: dummyUser.currentUser
+      users: []
     }
   },
   components: {
     AdminNav
   },
+  computed: {
+    ...mapState(['currentUser'])
+  },
   created() {
     this.fetchUsers()
   },
   methods: {
-    fetchUsers() {
-      this.users = dummyUsers.users
-    },
-    toggleUserRole({ userId, isAdmin }) {
-      this.users = this.users.map(user => {
-        // 如果當前 id 符合傳入 id，反轉 isAdmin
-        if(user.id === userId) {
-          return {
-            ...user,
-            isAdmin: !isAdmin
-          }
+    async fetchUsers() {
+      try {
+        const { data } = await adminAPI.users.get()
+        this.users = data.users
+
+        if (data.status === 'error') {
+          throw new Error(data.message)
         }
-        // 其他 user 原封不動傳回去
-        return user
-      })
+      } catch (error) {
+        console.error(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得使用者資料，請稍後再試'
+        })
+      }
+    },
+    async toggleUserRole({ userId, isAdmin }) {
+      try {
+        this.users = this.users.map(user => {
+          // 如果當前 id 符合傳入 id，反轉 isAdmin
+          if(user.id === userId) {
+            return {
+              ...user,
+              isAdmin: !isAdmin
+            }
+          }
+          // 其他 user 原封不動傳回去
+          return user
+        })
+      } catch (error) {
+        console.error(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法更改角色權限，請稍後再試'
+        })
+      }
     }
   }
 }
