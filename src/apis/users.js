@@ -12,6 +12,11 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  update({ userId, formData }) {
+    return apiHelper.get(`/users/${userId}`, formData, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
   addFavorite({ restaurantId }) {
     // https://github.com/axios/axios#request-method-aliases
     // post 請求有兩個必要參數：url, data；此處沒有要帶資料所以填 null

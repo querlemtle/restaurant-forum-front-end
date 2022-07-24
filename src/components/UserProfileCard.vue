@@ -8,10 +8,10 @@
         <h5 class="card-title">{{ user.name }}</h5>
         <p class="card-text">{{ user.email }}</p>
         <ul class="list-unstyled list-inline">
-          <li><strong>{{ userComments.length }}</strong> 已評論餐廳</li>
-          <li><strong>{{ userFavoritedRestaurants.length }}</strong> 收藏的餐廳</li>
-          <li><strong>{{ userFollowings.length }}</strong> followings (追蹤者)</li>
-          <li><strong>{{ userFollowers.length }}</strong> followers (追隨者)</li>
+          <li><strong>{{ user.commentsLength }}</strong> 已評論餐廳</li>
+          <li><strong>{{ user.favoritedRestaurantsLength }}</strong> 收藏的餐廳</li>
+          <li><strong>{{ user.followingsLength }}</strong> followings (追蹤者)</li>
+          <li><strong>{{ user.followersLength }}</strong> followers (追隨者)</li>
         </ul>
         <p></p>
         <form
@@ -19,24 +19,28 @@
           method="POST"
           style="display: contents"
         >
-          <template
-          v-if="dummyUser.isAuthenticated"
-          >
-            <button type="submit" class="btn btn-primary">Edit</button>
-          </template>
-          <template v-else>
+          <template v-if="currentUser.id === user.id">
+            <router-link :to="{ name: 'user-edit',  params: { id: user.id }}">
             <button
-            v-if="user.isFollowed"
+            type="submit"
+            class="btn btn-primary"
+            >
+            Edit
+            </button></router-link>
+          </template>
+          <template>
+            <button
+            v-if="isFollowed"
             type="submit"
             class="btn btn-danger"
-            @click.stop.prevent="deleteFollowed"
+            @click.stop.prevent="deleteFollowing(user.id)"
             >
             取消追蹤</button>
             <button
             v-else
             type="submit"
             class="btn btn-primary"
-            @click.stop.prevent="addFollowed"
+            @click.stop.prevent="addFollowing(user.id)"
             >追蹤</button>
           </template>
         </form>
@@ -48,17 +52,9 @@
 
 <script>
 import { emptyImageFilter } from './../utils/mixins'
-
-const dummyUser = {
-  currentUser: {
-    id: 1,
-    name: '管理者',
-    email: 'root@example.com',
-    image: 'https://i.pravatar.cc/300',
-    isAdmin: true
-  },
-  isAuthenticated: true
-}
+import usersAPI from './../apis/users'
+import { Toast } from './../utils/helpers'
+import { mapState } from 'vuex'
 
 export default {
   name: 'UserProfileCard',
@@ -68,40 +64,62 @@ export default {
       type: Object,
       required: true
     },
-    userFollowings: {
-      type: Array,
-      required: true
-    },
-    userFollowers: {
-      type: Array,
-      required: true
-    },
-    userComments: {
-      type: Array,
-      required: true
-    },
-    userFavoritedRestaurants: {
-      type: Array,
+    initialIsFollowed: {
+      type: Boolean,
       required: true
     }
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   data () {
     return {
       user: this.initialUser,
-      dummyUser
+      isFollowed: this.initialIsFollowed,
+    }
+  },
+  watch: {
+    initialIsFollowed(isFollowed) {
+      this.isFollowed = isFollowed
     }
   },
   methods: {
-    addFollowed () {
-      this.user = {
-        ...this.user,
-        isFollowed: true
-      }  
+    async addFollowing (userId) {
+      try {
+        const { data } = await usersAPI.addFollowing({ userId })
+
+        if(data.status === 'error') {
+          throw new Error(data.message)
+        }
+
+        // 隱藏追蹤按鈕
+        this.isFollowed = true
+
+      } catch (error) {
+        console.error(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法加入追蹤使用者，請稍後再試'
+        })
+      }
     },
-    deleteFollowed () {
-      this.user = {
-        ...this.user,
-        isFollowed: false
+    async deleteFollowing (userId) {
+      try {
+        const { data } = await usersAPI.deleteFollowing({ userId })
+
+        if(data.status === 'error') {
+          throw new Error(data.message)
+        }
+
+        // 隱藏取消追蹤按鈕
+        this.isFollowed = false
+
+      } catch (error) {
+        console.error(error)
+        Toast.fire({
+          icon: 'error',
+          title: '無法取消追蹤使用者，請稍後再試'
+        })
       }
     }
   }
