@@ -98,7 +98,10 @@ import { Toast } from './../utils/helpers'
 
           // 把 data.token 存到 localStorage
           localStorage.setItem('token', data.token)
-
+          
+          // 透過 setCurrentUser 把使用者資料存到 Vuex 的 state
+          this.$store.commit('setCurrentUser', data.user)
+          
           // vue-router 轉址到 /restaurants
           this.$router.push('/restaurants')
         } catch (error) {

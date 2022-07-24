@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import NotFound from '../views/NotFound.vue'
 import SignIn from '../views/SignIn.vue'
 import Restaurants from '../views/Restaurants.vue'
+import store from './../store'
 
 Vue.use(VueRouter)
 
@@ -59,6 +60,11 @@ const routes = [
     component: () => import('../views/User.vue')
   },
   {
+    path: '/users/:id/edit',
+    name: 'user-edit',
+    component: () => import('../views/UserEdit.vue')
+  },
+  {
     path: '/admin',
     exact: true,
     redirect: '/admin/restaurants'
@@ -98,6 +104,12 @@ const routes = [
 const router = new VueRouter({
   linkExactActiveClass: 'active',
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  // dispatch 發動 actions，每次切換路由都請求一次使用者資料
+  store.dispatch('fetchCurrentUser')
+  next()
 })
 
 export default router
