@@ -141,6 +141,7 @@ import { Toast } from './../utils/helpers'
           // 成功登入後轉址到登入頁
           this.$router.push('/signin')
         } catch (error) {
+          console.log(error.message)
           Toast.fire({
             icon: 'error',
             title: '註冊失敗，請重試'
