@@ -3,7 +3,7 @@
     <div>
       <h1>{{ restaurant.name }}</h1>
       <span class="badge badge-secondary mt-1 mb-3">
-        {{ restaurant.Category.name }}
+        {{ restaurant.categoryName }}
       </span>
     </div>
 
@@ -56,6 +56,7 @@ export default {
       try {
         const { data } = await restaurantsAPI.getRestaurant({restaurantId})
         const { id, name, Category, Comments, viewCounts } = data.restaurant
+
         this.restaurant = {
           ...this.restaurant,
           id,
@@ -65,7 +66,7 @@ export default {
           viewCounts
         }
       } catch (error) {
-        console.error(error)
+        console.error(error.message)
         Toast.fire({
           icon: 'error',
           title: '無法取得餐廳資料，請稍後再試'

@@ -96,7 +96,8 @@ export default {
       }
     },
     afterDeleteComment (commentId) {
-      this.restaurantComments = this.restaurantComments.filter(comment => comment.id !== commentId)
+      this.restaurantComments = this.restaurantComments.filter(
+        comment => comment.id !== commentId)
     },
     afterCreateComment (payload) {
       const { commentId, restaurantId, text } = payload
