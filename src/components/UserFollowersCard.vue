@@ -9,7 +9,12 @@
       :to="{ name: 'user', params: { id: user.id } }"
       :key="user.id"
       >
-        <img :src="user.image | emptyImage" width="60" height="60" class="avatar">
+        <img
+          :src="user.image | emptyImage"
+          width="60"
+          height="60"
+          class="mr-1"
+        >
       </router-link>
     </div>
   </div>

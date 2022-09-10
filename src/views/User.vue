@@ -76,6 +76,9 @@ export default {
       isFollowed: false
     }
   },
+  computed: {
+    ...mapState(['currentUser'])
+  },
   created() {
     const { id } = this.$route.params
     this.fetchUser(id)
@@ -84,9 +87,6 @@ export default {
     const { id } = to.params
     this.fetchUser(id)
     next()
-  },
-  computed: {
-    ...mapState(['currentUser'])
   },
   methods: {
     async fetchUser (userId) {
@@ -125,6 +125,7 @@ export default {
         this.userFollowings = Followings
         this.userFollowers = Followers
         this.userComments = Comments
+        this.userFavoritedRestaurants = FavoritedRestaurants
         this.isFollowed = isFollowed
 
       } catch (error) {

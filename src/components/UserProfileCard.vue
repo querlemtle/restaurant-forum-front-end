@@ -28,7 +28,7 @@
             Edit
             </button></router-link>
           </template>
-          <template>
+          <template v-else>
             <button
             v-if="isFollowed"
             type="submit"
@@ -69,18 +69,24 @@ export default {
       required: true
     }
   },
-  computed: {
-    ...mapState(['currentUser'])
-  },
   data () {
     return {
       user: this.initialUser,
       isFollowed: this.initialIsFollowed,
     }
   },
+  computed: {
+    ...mapState(['currentUser'])
+  },
   watch: {
-    initialIsFollowed(isFollowed) {
-      this.isFollowed = isFollowed
+    initialUser(newValue) {
+      this.user = {
+        ...this.user,
+        ...newValue
+      }
+    },
+    initialIsFollowed(newValue) {
+      this.isFollowed = newValue
     }
   },
   methods: {

@@ -11,7 +11,7 @@
           :src="restaurant.Restaurant.image | emptyImage"
           width="60"
           height="60"
-          class="avatar"
+          class="mr-1"
         />
       </router-link>
     </div>

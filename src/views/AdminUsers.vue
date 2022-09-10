@@ -55,13 +55,13 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'AdminUsers',
+  components: {
+    AdminNav
+  },
   data () {
     return {
       users: []
     }
-  },
-  components: {
-    AdminNav
   },
   computed: {
     ...mapState(['currentUser'])
@@ -88,6 +88,17 @@ export default {
     },
     async toggleUserRole({ userId, isAdmin }) {
       try {
+        // PUT 請求更改角色權限
+        const { data } = await adminAPI.users.update({
+          userId,
+          isAdmin: (!isAdmin).toString()
+        })
+        
+        if (data.status === 'error') {
+          throw new Error(data.message)
+        }
+
+        // 更改畫面顯示
         this.users = this.users.map(user => {
           // 如果當前 id 符合傳入 id，反轉 isAdmin
           if(user.id === userId) {

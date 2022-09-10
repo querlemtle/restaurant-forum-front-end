@@ -57,15 +57,11 @@ export default {
       user: {
         id: -1,
         name: '',
-        image: ''
+        image: '',
+        email: ''
       },
       isProcessing: false
     }
-  },
-  created () {
-    if (this.currentUser.id === -1) return
-    const { id } = this.$route.params
-    this.setUser(id)
   },
   computed: {
     ...mapState(['currentUser'])
@@ -76,6 +72,11 @@ export default {
       const { id } = this.$route.params
       this.setUser(id)
     }
+  },
+  created () {
+    if (this.currentUser.id === -1) return
+    const { id } = this.$route.params
+    this.setUser(id)
   },
   methods: {
     setUser (userId) {
@@ -108,20 +109,20 @@ export default {
     },
     async handleSubmit (e) {
       try {
-        // 暫時關掉按鈕
-        this.isProcessing = true
         // 若使用者名稱空白，跳出錯誤提示並結束
         if (!this.user.name) {
           Toast.fire({
             icon: 'warning',
-            title: '請填入使用者名稱'
+            title: '請填入名稱'
           })
           return
         }
 
         const form = e.target
-        const formData = new formData(form)
+        const formData = new FormData(form)
         const userId = this.currentUser.id
+        // 暫時關掉按鈕
+        this.isProcessing = true
 
         const { data } = await usersAPI.update({ userId, formData })
 
@@ -133,7 +134,7 @@ export default {
         // 轉址到使用者頁面
         this.$router.push({ name: 'user', params: { id: this.id } })
       } catch (error) {
-        console.error(error)
+        console.error(error.message)
         // 重新開啟按鈕
         this.isProcessing = false
         Toast.fire({
