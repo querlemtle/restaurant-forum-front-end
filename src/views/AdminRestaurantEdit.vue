@@ -71,7 +71,7 @@ export default {
     async handleAfterSubmit (formData) {
       try {
         this.isProcessing = true
-        const { data } = await adminAPI.restaurants.getDetail({ restaurantId: this.restaurant.id, formData })
+        const { data } = await adminAPI.restaurants.update({ restaurantId: this.restaurant.id, formData })
 
         if(data.status === 'error') {
           throw new Error(data.message)
@@ -85,10 +85,6 @@ export default {
           icon: 'error',
           title: '無法更新餐廳資料，請稍後再試'
         })
-      }
-      // 透過 API 把 formData 的資料送到後端
-      for(let [name, value] of formData.entries()) {
-        console.log(`${name}: ${value}`)
       }
     }
   }
