@@ -94,7 +94,7 @@ export default {
     },
     async addFavorite (restaurantId) {
       const { data } = await usersAPI.addFavorite({restaurantId})
-      if(data.status !== 'success') {
+      if(data.status === 'error') {
         throw new Error(data.message)
       }
       this.restaurants = this.restaurants.map(restaurant => {
@@ -111,7 +111,7 @@ export default {
     },
     async deleteFavorite (restaurantId) {
       const { data } = await usersAPI.deleteFavorite({restaurantId})
-      if(data.status !== 'success') {
+      if(data.status === 'error') {
         throw new Error(data.message)
       }
       this.restaurants = this.restaurants.map(restaurant => {

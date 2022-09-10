@@ -46,7 +46,7 @@
 
       <div class="text-center mb-3">
         <p>
-          <a href="/signup">Sign Up</a>
+          <router-link to="/signup">Sign Up</router-link>
         </p>
       </div>
 
@@ -91,8 +91,7 @@ import { Toast } from './../utils/helpers'
           // 從 API 回傳之 response 取出 data
           const { data } = response
 
-          // 檢查是否成功登入，避免使用者未輸入帳密就登入
-          if(data.status !== 'success') {
+          if(data.status === 'error') {
             throw new Error(data.message)
           }
 
@@ -113,8 +112,6 @@ import { Toast } from './../utils/helpers'
             icon: 'warning',
             title: '請確認您輸入了正確的帳號密碼'
           })
-          // 如果帳密輸入錯誤會產生 error
-          console.log('--error--', error)
         }
       }
     }

@@ -153,6 +153,14 @@ export default {
       isLoading: true
     }
   },
+    watch: {
+    initialRestaurant(newValue) {
+      this.restaurant = {
+        ...this.restaurant,
+        ...newValue
+      }
+    }
+  },
   created() {
     this.fetchCategories(),
     this.restaurant = {
@@ -160,14 +168,6 @@ export default {
       ...this.restaurant,
       // 使用父層傳來的資料
       ...this.initialRestaurant
-    }
-  },
-  watch: {
-    initialRestaurant(newValue) {
-      this.restaurant = {
-        ...this.restaurant,
-        ...newValue
-      }
     }
   },
   methods: {
@@ -190,7 +190,6 @@ export default {
     },
     handleFileChange(e) {
       const { files } = e.target
-      console.log(files)
       // 若使用者取消上傳圖片，length 會歸零
       if(files.length === 0) {
         this.restaurant.image = ''

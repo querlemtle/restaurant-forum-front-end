@@ -81,7 +81,7 @@ export default {
       try {
         const { data } = await usersAPI.addFavorite({ restaurantId })
         
-        if(data.status !== 'success') {
+        if(data.status === 'error') {
           throw new Error(data.message)
         }
 
@@ -91,7 +91,7 @@ export default {
         }
 
       } catch (error) {
-        console.log(error)
+        console.error(error)
         Toast.fire({
           icon: 'error',
           title: '無法將餐廳加入最愛，請稍後再試'
@@ -102,7 +102,7 @@ export default {
       try {
         const { data } = await usersAPI.deleteFavorite({ restaurantId })
         // 若請求過程有錯，則進到錯誤處理，跳出錯誤提示
-        if(data.status !== 'success') {
+        if(data.status === 'error') {
           throw new Error(data.message)
         }
 
@@ -121,7 +121,7 @@ export default {
     async addLike (restaurantId) {
       try {
         const { data } = await usersAPI.addLike({ restaurantId })
-        if(data.status !== 'success') {
+        if(data.status === 'error') {
           throw new Error(data.message)
         }
 
@@ -139,7 +139,7 @@ export default {
     async deleteLike (restaurantId) {
       try {
         const { data } = await usersAPI.deleteLike({ restaurantId })
-        if(data.status !== 'success') {
+        if(data.status === 'error') {
           throw new Error(data.message)
         }
         this.restaurant = {

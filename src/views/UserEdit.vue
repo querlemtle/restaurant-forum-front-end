@@ -132,7 +132,7 @@ export default {
         // 重新開啟按鈕
         this.isProcessing = false
         // 轉址到使用者頁面
-        this.$router.push({ name: 'user', params: { id: this.id } })
+        this.$router.push({ name: 'user', params: { id: userId } })
       } catch (error) {
         console.error(error.message)
         // 重新開啟按鈕
