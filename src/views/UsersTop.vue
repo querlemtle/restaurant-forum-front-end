@@ -5,7 +5,11 @@
       美食達人
     </h1>
     <hr>
-    <div class="row text-center">
+    <Spinner v-if="isLoading" />
+    <div
+      v-else
+      class="row text-center"
+    >
       <!-- user card -->
       <div 
         class="col-3"
@@ -51,16 +55,19 @@ import NavTabs from './../components/NavTabs'
 import { emptyImageFilter } from './../utils/mixins'
 import usersAPI from './../apis/users'
 import { Toast } from './../utils/helpers'
+import Spinner from './../components/Spinner'
 
 export default {
   name: 'UsersTop',
   mixins: [emptyImageFilter],
   components: {
-    NavTabs
+    NavTabs,
+    Spinner
   },
   data() {
     return {
-      users: []
+      users: [],
+      isLoading: true
     }
   },
   created() {
@@ -77,7 +84,9 @@ export default {
           followerCount: user.FollowerCount,
           isFollowed: user.isFollowed
         }))
+        this.isLoading = false        
       } catch (error) {
+        this.isLoading = false  
         console.error(error)
         Toast.fire({
           icon: 'error',

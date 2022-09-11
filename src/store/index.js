@@ -43,6 +43,10 @@ export default new Vuex.Store({
       try {
         const { data } = await usersAPI.getCurrentUser()
 
+        if (data.status === 'error') {
+          throw new Error(data.message)
+        }
+        
         const { id, name, email, image, isAdmin } = data
         // 以 commit 發動 mutations 裡的 setCurrentUser，每次換路由時更新 state
         commit('setCurrentUser', {

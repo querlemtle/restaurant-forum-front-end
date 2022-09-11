@@ -1,39 +1,42 @@
 <template>
   <div class="album py-5 bg-light">
     <div class="container">
-      <div class="card mb-3">
-      <!-- UserProfileCard -->
-      <UserProfileCard
-      :initial-user="user"
-      :initial-is-followed="isFollowed"
-      />
-      </div>
-
-      <div class="row">
-        <div class="col-md-4">
-        <!-- UserFollowingsCard -->
-        <UserFollowingsCard
-        :user-followings="userFollowings"
-        />
-        <br>
-        <!-- UserFollowersCard  -->
-        <UserFollowersCard
-        :user-followers="userFollowers"
-        />
+      <Spinner v-if="isLoading" />
+      <template v-else>
+        <div class="card mb-3">
+          <!-- UserProfileCard -->
+          <UserProfileCard
+            :initial-user="user"
+            :initial-is-followed="isFollowed"
+          />
         </div>
 
-        <div class="col-md-8">
-        <!-- UserCommentsCard -->
-        <UserCommentsCard
-        :user-comments="userComments"
-        />
-        <br>
-        <!-- UserFavoritedRestaurantsCard -->
-        <UserFavoritedRestaurantsCard
-        :user-favorited-restaurants="userFavoritedRestaurants"
-        />
+        <div class="row">
+          <div class="col-md-4">
+            <!-- UserFollowingsCard -->
+            <UserFollowingsCard
+              :user-followings="userFollowings"
+            />
+            <br>
+            <!-- UserFollowersCard  -->
+            <UserFollowersCard
+              :user-followers="userFollowers"
+            />
+          </div>
+
+          <div class="col-md-8">
+            <!-- UserCommentsCard -->
+            <UserCommentsCard
+              :user-comments="userComments"
+            />
+            <br>
+            <!-- UserFavoritedRestaurantsCard -->
+            <UserFavoritedRestaurantsCard
+              :user-favorited-restaurants="userFavoritedRestaurants"
+            />
+          </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -47,6 +50,7 @@ import UserFavoritedRestaurantsCard from './../components/UserFavoritedRestauran
 import usersAPI from './../apis/users'
 import { Toast } from './../utils/helpers'
 import { mapState } from 'vuex'
+import Spinner from './../components/Spinner'
 
 export default {
   name: 'User',
@@ -55,7 +59,8 @@ export default {
     UserFollowingsCard,
     UserFollowersCard,
     UserCommentsCard,
-    UserFavoritedRestaurantsCard
+    UserFavoritedRestaurantsCard,
+    Spinner
   },
   data () {
     return {
@@ -73,7 +78,8 @@ export default {
       userFollowers: [],
       userComments: [],
       userFavoritedRestaurants: [],
-      isFollowed: false
+      isFollowed: false,
+      isLoading: true
     }
   },
   computed: {
@@ -127,9 +133,10 @@ export default {
         this.userComments = Comments
         this.userFavoritedRestaurants = FavoritedRestaurants
         this.isFollowed = isFollowed
-
+        this.isLoading = false
       } catch (error) {
-        console.error(error)
+        this.isLoading = false
+        console.error(error.message)
         Toast.fire({
           icon: 'error',
           title: '無法取得使用者資料，請稍後再試'

@@ -1,7 +1,8 @@
 <template>
+  <Spinner v-if="isLoading" />  
   <form
-  v-show="!isLoading"
-  @submit.stop.prevent="handleSubmit"
+    v-else
+    @submit.stop.prevent="handleSubmit"
   >
     <div class="form-group">
       <label for="name">Name</label>
@@ -20,9 +21,9 @@
       <label for="categoryId">Category</label>
       <select
         id="categoryId"
+        v-model="restaurant.categoryId"        
         class="form-control"
         name="categoryId"
-        v-model="restaurant.categoryId"
         required
       >
         <option
@@ -33,11 +34,11 @@
           --請選擇--
         </option>
         <option 
-        v-for="category in categories"
-        :key="category.id"
-        :value="category.id"
+          v-for="category in categories"
+          :key="category.id"
+          :value="category.id"
         >
-        {{ category.name }}
+          {{ category.name }}
         </option>
       </select>
     </div>
@@ -121,9 +122,13 @@
 <script>
 import adminAPI from './../apis/admin'
 import { Toast } from './../utils/helpers'
+import Spinner from './../components/Spinner'
 
 export default {
   name: 'AdminRestaurantForm',
+  components: {
+    Spinner
+  },
   props: {
     initialRestaurant: {
       type: Object,

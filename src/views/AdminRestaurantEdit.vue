@@ -1,10 +1,14 @@
 <template>
- <div class="container py-5">
+  <div class="container py-5">
     <!-- 餐廳表單 AdminRestaurantForm -->
-    <AdminRestaurantForm
-    :initial-restaurant="restaurant"
-    :is-processing="isProcessing" 
-    @after-submit="handleAfterSubmit" />
+    <Spinner v-if="isLoading" />
+    <template v-else>
+      <AdminRestaurantForm
+        :initial-restaurant="restaurant"
+        :is-processing="isProcessing" 
+        @after-submit="handleAfterSubmit"
+      />
+    </template>
   </div>
 </template>
 
@@ -12,11 +16,13 @@
 import AdminRestaurantForm from './../components/AdminRestaurantForm'
 import adminAPI from './../apis/admin'
 import { Toast } from './../utils/helpers'
+import Spinner from './../components/Spinner'
 
 export default {
   name: 'AdminRestaurantEdit',
   components: {
-    AdminRestaurantForm
+    AdminRestaurantForm,
+    Spinner
   },
   data () {
     return {
@@ -30,7 +36,8 @@ export default {
         description: '',
         image: ''
       },
-      isProcessing: false
+      isProcessing: false,
+      isLoading: true
     }
   },
   created () {
@@ -60,7 +67,9 @@ export default {
           image,
           categoryId
         }
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         console.error(error)
         Toast.fire({
           icon: 'error',

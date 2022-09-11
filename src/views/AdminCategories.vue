@@ -7,10 +7,10 @@
       <div class="form-row">
         <div class="col-auto">
           <input
+            v-model="newCategoryName"
             type="text"
             class="form-control"
             placeholder="新增餐廳類別..."
-            v-model="newCategoryName"
           >
         </div>
         <div class="col-auto">
@@ -25,7 +25,11 @@
         </div>
       </div>
     </form>
-    <table class="table">
+    <Spinner v-if="isLoading" />
+    <table
+      v-else
+      class="table"
+    >
       <thead class="thead-dark">
         <tr>
           <th
@@ -55,15 +59,16 @@
           </th>
           <td class="position-relative">
             <div
-            v-show="!category.isEditing"
-            class="category-name">
+              v-show="!category.isEditing"
+              class="category-name"
+            >
               {{ category.name }}
             </div>
             <input
-            v-show="category.isEditing"
-            v-model="category.name"
-            type="text"
-            class="form-control"
+              v-show="category.isEditing"
+              v-model="category.name"
+              type="text"
+              class="form-control"
             >
             <span
               v-show="category.isEditing"
@@ -83,10 +88,10 @@
               Edit
             </button>
             <button
-            v-show="category.isEditing"
-            type="button"
-            class="btn btn-link mr-2"
-            @click.stop.prevent="updateCategory({ categoryId: category.id, name: category.name })"
+              v-show="category.isEditing"
+              type="button"
+              class="btn btn-link mr-2"
+              @click.stop.prevent="updateCategory({ categoryId: category.id, name: category.name })"
             >
               Save
             </button>
@@ -108,17 +113,20 @@
 import AdminNav from '@/components/AdminNav'
 import adminAPI from './../apis/admin'
 import { Toast } from './../utils/helpers'
+import Spinner from './../components/Spinner'
 
 export default {
   name: 'AdminCategories',
   components: {
-    AdminNav
+    AdminNav,
+    Spinner
   },
   data () {
     return {
       categories: [],
       newCategoryName: '',
-      isProcessing: false
+      isProcessing: false,
+      isLoading: true
     }
   },
   created () {
@@ -141,7 +149,9 @@ export default {
             nameCached: ''
           })
         )
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         console.error(error)
         Toast.fire({
           icon: 'error',

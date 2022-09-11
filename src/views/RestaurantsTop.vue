@@ -6,7 +6,9 @@
     </h1>
 
     <hr>
-    <div
+    <Spinner v-if="isLoading" />
+    <div 
+      v-else
       class="card mb-3"
       style="max-width: 540px;margin: auto;"
       v-for="restaurant in restaurants"
@@ -64,16 +66,19 @@ import { emptyImageFilter } from './../utils/mixins'
 import restaurantsAPI from './../apis/restaurants'
 import usersAPI from './../apis/users'
 import { Toast } from './../utils/helpers'
+import Spinner from './../components/Spinner'
 
 export default {
   name: 'RestaurantsTop',
   mixins: [emptyImageFilter],
   components: {
-    NavTabs
+    NavTabs,
+    Spinner
   },
   data () {
     return {
-      restaurants: []
+      restaurants: [],
+      isLoading: true
     }
   },
   created() {
@@ -84,7 +89,9 @@ export default {
       try {
         const response = await restaurantsAPI.getTopRestaurants()
         this.restaurants = response.data.restaurants
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         console.error(error)
         Toast.fire({
           icon: 'error',
