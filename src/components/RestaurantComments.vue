@@ -5,14 +5,15 @@
     </h2>
 
     <div
-    v-for="comment in restaurantComments"
-    :key="comment.id"
+      v-for="comment in restaurantComments"
+      :key="comment.id"
     >
       <blockquote class="blockquote mb-0">
         <button
           v-if="currentUser.isAdmin"
           type="button"
           class="btn btn-danger float-right"
+          :disabled="isProcessing"
           @click.prevent.stop="handleDeleteButtonClick(comment.id)"
         >
           Delete
@@ -47,12 +48,18 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      isProcessing: false
+    }
+  },
   computed: {
     ...mapState(['currentUser'])
   },
   methods: {
     async handleDeleteButtonClick (commentId) {
       try {
+        this.isProcessing = true
         const { data } = await commentsAPI.delete({ commentId })
 
         if (data.status === 'error') {
@@ -64,7 +71,9 @@ export default {
           icon: 'success',
           title: '成功刪除評論'
         })
+        this.isProcessing = false
       } catch (error) {
+        this.isProcessing = false        
         console.error(error.message)
         Toast.fire({
           icon: 'error',

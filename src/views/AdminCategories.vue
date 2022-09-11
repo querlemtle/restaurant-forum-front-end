@@ -91,6 +91,7 @@
               v-show="category.isEditing"
               type="button"
               class="btn btn-link mr-2"
+              :disabled="isProcessing"              
               @click.stop.prevent="updateCategory({ categoryId: category.id, name: category.name })"
             >
               Save
@@ -98,6 +99,7 @@
             <button
               type="button"
               class="btn btn-link mr-2"
+              :disabled="isProcessing"              
               @click.stop.prevent="deleteCategory(category.id)"
             >
               Delete
@@ -196,6 +198,7 @@ export default {
     },
     async deleteCategory (categoryId) {
       try {
+        this.isProcessing = true        
         const { data } = await adminAPI.categories.delete({ categoryId })
 
         if (data.status === 'error') {
@@ -204,9 +207,10 @@ export default {
 
         // 以 array.filter 修改畫面呈現資料
         this.categories = this.categories.filter(category => category.id !== categoryId)
-
+        this.isProcessing = false
       } catch (error) {
-        console.error(error)
+        this.isProcessing = false
+        console.error(error.message)
         Toast.fire({
           icon: 'error',
           title: '無法刪除餐廳類別，請稍後再試'
@@ -215,6 +219,7 @@ export default {
     },
     async updateCategory ({ categoryId, name }) {
       try {
+        this.isProcessing = true
         const { data } = await adminAPI.categories.update({ categoryId, name })
 
         if (data.status === 'error') {
@@ -222,9 +227,10 @@ export default {
         }
 
         this.toggleIsEditing(categoryId)
-
+        this.isProcessing = false
       } catch (error) {
-        console.error(error)
+        this.isProcessing = false        
+        console.error(error.message)
         Toast.fire({
           icon: 'error',
           title: '無法更新餐廳類別，請稍後再試'

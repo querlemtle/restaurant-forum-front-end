@@ -40,6 +40,7 @@
             <button
               type="button"
               class="btn btn-link"
+              :disabled="isProcessing"
               @click="toggleUserRole({ userId: user.id, isAdmin: user.isAdmin })"
             >
               {{ user.isAdmin ? 'set as user' : 'set as admin' }}
@@ -67,7 +68,8 @@ export default {
   data () {
     return {
       users: [],
-      isLoading: true
+      isLoading: true,
+      isProcessing: false
     }
   },
   computed: {
@@ -97,6 +99,7 @@ export default {
     },
     async toggleUserRole({ userId, isAdmin }) {
       try {
+        this.isProcessing = true
         // PUT 請求更改角色權限
         const { data } = await adminAPI.users.update({
           userId,
@@ -119,7 +122,9 @@ export default {
           // 其他 user 原封不動傳回去
           return user
         })
+        this.isProcessing = false
       } catch (error) {
+        this.isProcessing = false
         console.error(error)
         Toast.fire({
           icon: 'error',

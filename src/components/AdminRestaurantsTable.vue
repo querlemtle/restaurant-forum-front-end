@@ -37,16 +37,21 @@
           <router-link
             :to="{ name: 'admin-restaurant', params: { id: restaurant.id }}"
             class="btn btn-link"
-          >Show</router-link>
+          >
+            Show
+          </router-link>
 
           <router-link
             :to="{ name: 'admin-restaurant-edit', params: { id: restaurant.id }}"
             class="btn btn-link"
-          >Edit</router-link>
+          >
+            Edit
+          </router-link>
 
           <button
             type="button"
             class="btn btn-link"
+            :disabled="isProcessing"
             @click.prevent.stop="deleteRestaurant(restaurant.id)"
           >
             Delete
@@ -69,7 +74,8 @@ export default {
   data () {
     return {
       restaurants: [],
-      isLoading: true
+      isLoading: true,
+      isProcessing: false
     }
   },
   created () {
@@ -92,14 +98,17 @@ export default {
     },
     async deleteRestaurant (restaurantId) {
       try {
+        this.isProcessing = true        
         const { data } = await adminAPI.restaurants.delete({restaurantId})
         if(data.status === 'error') {
           throw new Error(data.message)
         }
 
         this.restaurants = this.restaurants.filter(restaurant => restaurant.id !== restaurantId)
+        this.isProcessing = false        
       } catch (error) {
-        console.error(error)
+        this.isProcessing = false
+        console.error(error.message)
         Toast.fire({
           icon: 'error',
           title: '無法刪除餐廳資料，請稍後再試'
